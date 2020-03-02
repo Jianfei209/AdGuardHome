@@ -291,7 +291,7 @@ func (d *Dnsfilter) CheckHost(host string, qtype uint16, setts *RequestFiltering
 	var result Result
 	var err error
 
-	result = d.processRewrites(host, qtype)
+	result = d.processRewrites(host)
 	if result.Reason == ReasonRewrite {
 		return result, nil
 	}
@@ -357,7 +357,7 @@ func (d *Dnsfilter) CheckHost(host string, qtype uint16, setts *RequestFiltering
 //  . repeat for the new domain name (Note: we return only the last CNAME)
 // . Find A or AAAA record for a domain name (exact match or by wildcard)
 //  . if found, return IP addresses
-func (d *Dnsfilter) processRewrites(host string, qtype uint16) Result {
+func (d *Dnsfilter) processRewrites(host string) Result {
 	var res Result
 
 	d.confLock.RLock()
@@ -384,7 +384,7 @@ func (d *Dnsfilter) processRewrites(host string, qtype uint16) Result {
 	}
 
 	for _, r := range rr {
-		if r.Type != dns.TypeCNAME && r.Type == qtype {
+		if r.Type != dns.TypeCNAME {
 			res.IPList = append(res.IPList, r.IP)
 			log.Debug("Rewrite: A/AAAA for %s is %s", host, r.IP)
 		}
