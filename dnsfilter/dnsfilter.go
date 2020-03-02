@@ -356,7 +356,7 @@ func (d *Dnsfilter) CheckHost(host string, qtype uint16, setts *RequestFiltering
 //  . if found, set domain name to canonical name
 //  . repeat for the new domain name (Note: we return only the last CNAME)
 // . Find A or AAAA record for a domain name (exact match or by wildcard)
-//  . if found, return IP addresses
+//  . if found, return IP addresses (both IPv4 and IPv6)
 func (d *Dnsfilter) processRewrites(host string) Result {
 	var res Result
 
